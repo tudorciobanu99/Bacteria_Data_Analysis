@@ -8,23 +8,46 @@ Created on Mon Oct 29 11:49:10 2018
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from data_load import dataLoad
 
 def dataPlot(data):
-    # Number of bacteria
+    # Number of bacteria plot
+    
+    # This array holds the possible names for bacterias
     bacteria = np.array(["Salmonella enterica", "Bacillus cereus", "Listeria", "Brochothrix thermosphacta"])
+    
+    # This empty array will eventually hold the number of each type of bacteria
     numberOfBact = np.array([],dtype = int)
     for i in range(len(bacteria)):
         bact = np.where(data[:,2] == bacteria[i])
-        numberOfBact = np.append(numberOfBact, len(data[:,2][bact])) 
-    colors = ['red','blue','green','yellow']
-    plt.bar(np.array(['1','2','3','4']), numberOfBact, color = colors, edgecolor='black')
+        if (len(data[:,2][bact]) > 0):    #if there is 0 bacterias of a specific type, it won't be included in the numberOfBact array
+            numberOfBact = np.append(numberOfBact, len(data[:,2][bact]))
+    
+    # pandas was used instead of numpy, as it preserves the order of the values gotten through the unique() function
+    bacteriaAxis = pd.unique(data[:,2])
+    ax1 = plt.subplot()
+    ax1.bar(bacteriaAxis, numberOfBact, color = 'g', label = bacteria) # y-values: number of each type of bacteria, x-values: the name for the bacterias
+    ax1.set_xticklabels(bacteriaAxis, rotation = 45)  # rotation = 45 means that the x-values are going to be displayed with a 45 degree shift from the horizontal position
     plt.xlabel('Bacterias')
     plt.ylabel('Nr. of Bacterias')
     plt.title('Number of bacterias')
-    plt.legend(bacteria)
     plt.show()
-    # Growth rate by temperature
     
-data = dataLoad('test.txt')
-dataPlot(data)
+    
+    # Growth rate by temperature 
+    ax2 = plt.subplot()
+    colors = np.array(['green', 'red', 'blue', 'magenta'])  # An array that holds the 4 colors that could be used for this plot
+    for i in range(len(bacteria)):
+        bact = np.where(data[:,2] == bacteria[i])   
+        if (len(data[:,2][bact]) > 0):   # if there is 0 bacterias of a specific type, it won't be included in the plot
+            temperature = data[:,0][bact].astype(np.float)
+            growth_rate = data[:,1][bact].astype(np.float)
+            ax2.scatter(temperature, growth_rate, color = colors[i], label = bacteria[i], marker = 'x')
+            plt.xlim(10,60)   # setting x limits
+            plt.ylim(ymin = 0)  # setting y limits
+    ax2.legend()
+    plt.xlabel('Temperature')
+    plt.ylabel('Growth rate')
+    plt.title('Growth rate by temperature')
+    plt.show()
