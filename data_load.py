@@ -66,5 +66,3 @@ def dataLoad(filename):
     except IOError:
         print("Unable to open the file with the following name: " + filename + "! Please try again with a different filename! ")
     return data
-
-dataLoad('test.txt')
