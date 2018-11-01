@@ -8,14 +8,13 @@ Created on Mon Oct 29 11:49:10 2018
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-from data_load import dataLoad
 
 def dataPlot(data):
     # Number of bacteria plot
     
     # This array holds the possible names for bacterias
     bacteria = np.array(["Salmonella enterica", "Bacillus cereus", "Listeria", "Brochothrix thermosphacta"])
+    bacteriaAxis = np.array([])
     
     # This empty array will eventually hold the number of each type of bacteria
     numberOfBact = np.array([],dtype = int)
@@ -23,9 +22,9 @@ def dataPlot(data):
         bact = np.where(data[:,2] == bacteria[i])
         if (len(data[:,2][bact]) > 0):    #if there is 0 bacterias of a specific type, it won't be included in the numberOfBact array
             numberOfBact = np.append(numberOfBact, len(data[:,2][bact]))
+            bacteriaAxis = np.append(bacteriaAxis, bacteria[i])
     
-    # pandas was used instead of numpy, as it preserves the order of the values gotten through the unique() function
-    bacteriaAxis = pd.unique(data[:,2])
+    
     ax1 = plt.subplot()
     ax1.bar(bacteriaAxis, numberOfBact, color = 'g', label = bacteria) # y-values: number of each type of bacteria, x-values: the name for the bacterias
     ax1.set_xticklabels(bacteriaAxis, rotation = 45)  # rotation = 45 means that the x-values are going to be displayed with a 45 degree shift from the horizontal position
