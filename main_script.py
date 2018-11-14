@@ -235,9 +235,4 @@ while(active):
     else:
         print("\nUnkown command. Please try again.")
         choice = printMenu()
-                                    
-                            
-                    
-                    
-            
-        
+  
